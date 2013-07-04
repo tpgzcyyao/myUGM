@@ -34,7 +34,7 @@ edgeStruct.nEdges = size(edgeEnds,1);
 
 % Handle other arguments
 if isscalar(nStates)
-   nStates = repmat(nStates,[nNodes 1]);
+   nStates = repmat(nStates,[double(nNodes) 1]);
 end
 edgeStruct.nStates = int32(nStates(:));
 edgeStruct.useMex = useMex;
