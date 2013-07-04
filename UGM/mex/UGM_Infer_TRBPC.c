@@ -93,7 +93,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
                         }
                     }
                     else {
-                        if (n == edgeEnds[e2+nEdges]) {
+                        if (n == edgeEnds[e2+nEdges]-1) {
                             for(s = 0; s < nStates[n]; s++) {
                                 tmp[s] /= pow(newMsgs[s+maxState*e2], 1.-mu[e2]);
                             }
