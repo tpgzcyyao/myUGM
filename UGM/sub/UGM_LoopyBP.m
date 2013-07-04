@@ -5,7 +5,7 @@ nEdges = size(edgePot,3);
 edgeEnds = edgeStruct.edgeEnds;
 V = edgeStruct.V;
 E = edgeStruct.E;
-nStates = edgeStruct.nStates;
+nStates = double(edgeStruct.nStates);
 
 % Initialize
 nodeBel = zeros(nNodes,maxState);
@@ -23,10 +23,10 @@ end
 for i = 1:edgeStruct.maxIter
     for n = 1:nNodes
         % Find Neighbors
-        edges = E(V(n):V(n+1)-1);
+        edges = UGM_getEdges(n,edgeStruct);
 
         % Send a message to each neighbor
-        for e = edges(:)'
+        for e = edges
             n1 = edgeEnds(e,1);
             n2 = edgeEnds(e,2);
 
