@@ -95,8 +95,8 @@ for c = 1:nCliques
             end
         end
         
-        edges = E(V(n):V(n+1)-1);
-        for e = edges(:)'
+        edges = UGM_getEdges(n,edgeStruct);
+        for e = edges
             n1 = edgeEnds(e,1);
             n2 = edgeEnds(e,2);
             if ismember(n1,nodes) && ismember(n2,nodes) && edgePotMissing(e)
@@ -228,7 +228,7 @@ for c = 1:nCliques
            
            for nodeInd = 1:sepLength
                s{nodeInd} = s{nodeInd} + 1;
-               if s{nodeInd} <= nStates(sep(nodeInd))
+               if s{nodeInd} <= nStates(separators{e}(nodeInd))
                    break;
                else
                    s{nodeInd} = 1;
@@ -242,11 +242,10 @@ for c = 1:nCliques
     cb = cb./sum(cb(:));
     cliqueBel{c} = cb;
 end
-%cliqueBel{:}
-%pause
+% cliqueBel{:}
+% pause
 
 %% Make an ordering of nodes (right now, this is really innefficient)
-% Make an ordering of nodes (right now, this is really innefficient)
 colored = zeros(nCliques,1);
 order = zeros(0,1);
 parent = zeros(0,1);
@@ -292,7 +291,7 @@ for s = 1:maxIter
         nodes = cliques{c};
         if parent(o) == 0
             linInd = sampleDiscrete(cliqueBel{c}(:));
-            subInd = ind2sub_var(double(nStates(nodes)'),linInd);
+            subInd = ind2sub_vec(double(nStates(nodes)'),linInd);
             y(nodes) = subInd;
         else
             ind = cell(length(nodes),1);
@@ -304,11 +303,11 @@ for s = 1:maxIter
                 end
 			end
 			cb = cliqueBel{c}(ind{:});
-            linInd = sampleDiscrete(cliqueBel{c}(ind{:})/sum(cb(:)));
+            linInd = sampleDiscrete(cb(:)/sum(cb(:)));
             subNodes = nodes(find(y(nodes)==0));
-            subInd = ind2sub_var(double(nStates(subNodes)'),linInd);
+            subInd = ind2sub_vec(double(nStates(subNodes)'),linInd);
             y(subNodes) = subInd;
-        end
+		end
     end
     samples(:,s) = y;
 end
@@ -367,7 +366,7 @@ for e2 = neighbors(:)'
             
             for nodeInd = 1:length(sep)
                 s{nodeInd} = s{nodeInd} + 1;
-                if s{nodeInd} <= nStates(sep(nodeInd))
+                if s{nodeInd} <= nStates(separators{e2}(nodeInd))
                     break;
                 else
                     s{nodeInd} = 1;
@@ -388,7 +387,7 @@ for n = 1:sepLength
     s{n,1} = 1;
     sep(n) = find(nodes==separators{e}(n));
 end
-newm = ones([nStates(sep)' 1]);
+newm = ones([nStates(separators{e})' 1]);
 ind_sub = ind;
 while 1
     for nodeInd = 1:length(sep)
@@ -399,7 +398,7 @@ while 1
     
     for nodeInd = 1:length(sep)
         s{nodeInd} = s{nodeInd} + 1;
-        if s{nodeInd} <= nStates(sep(nodeInd))
+        if s{nodeInd} <= nStates(separators{e}(nodeInd))
             break;
         else
             s{nodeInd} = 1;
@@ -415,17 +414,5 @@ if c == edgeEnds(e,2)
     messages{e+nEdges} = newm;
 else
     messages{e} = newm;
-end
-end
-
-function ind = ind2sub_var(siz,ndx);
-n = length(siz);
-k = [1 cumprod(siz(1:end-1))];
-ind = zeros(n,1);
-for i = n:-1:1
-   vi = rem(ndx-1,k(i)) + 1;
-   vj = (ndx - vi)/k(i) + 1;
-   ind(i) = vj;
-   ndx = vi;
 end
 end

@@ -94,8 +94,8 @@ for c = 1:nCliques
             end
         end
 
-        edges = E(V(n):V(n+1)-1);
-        for e = edges(:)'
+        edges = UGM_getEdges(n,edgeStruct);
+        for e = edges
             n1 = edgeEnds(e,1);
             n2 = edgeEnds(e,2);
             if ismember(n1,nodes) && ismember(n2,nodes) && edgePotMissing(e)
@@ -226,7 +226,7 @@ for c = 1:nCliques
 
             for nodeInd = 1:sepLength
                 s{nodeInd} = s{nodeInd} + 1;
-                if s{nodeInd} <= nStates(sep(nodeInd))
+                if s{nodeInd} <= nStates(separators{e}(nodeInd))
                     break;
                 else
                     s{nodeInd} = 1;
@@ -240,7 +240,8 @@ for c = 1:nCliques
     cb = cb./sum(cb(:));
     cliqueBel{c} = cb;
 end
-%cliqueBel{:}
+% cliqueBel{:}
+% pause
 
 %% Compute nodeBel
 nodeBel = zeros(size(nodePot));
@@ -332,7 +333,7 @@ if nargout > 2
 
             for nodeInd = 1:sepLength
                 s{nodeInd} = s{nodeInd} + 1;
-                if s{nodeInd} <= nStates(sep(nodeInd))
+                if s{nodeInd} <= nStates(separators{e}(nodeInd))
                     break;
                 else
                     s{nodeInd} = 1;
@@ -427,7 +428,7 @@ for e2 = neighbors(:)'
 
             for nodeInd = 1:length(sep)
                 s{nodeInd} = s{nodeInd} + 1;
-                if s{nodeInd} <= nStates(sep(nodeInd))
+                if s{nodeInd} <= nStates(separators{e2}(nodeInd))
                     break;
                 else
                     s{nodeInd} = 1;
@@ -448,7 +449,7 @@ for n = 1:sepLength
     s{n,1} = 1;
     sep(n) = find(nodes==separators{e}(n));
 end
-newm = ones([nStates(sep)' 1]);
+newm = ones([nStates(separators{e})' 1]);
 ind_sub = ind;
 while 1
     for nodeInd = 1:length(sep)
@@ -459,7 +460,7 @@ while 1
 
     for nodeInd = 1:length(sep)
         s{nodeInd} = s{nodeInd} + 1;
-        if s{nodeInd} <= nStates(sep(nodeInd))
+        if s{nodeInd} <= nStates(separators{e}(nodeInd))
             break;
         else
             s{nodeInd} = 1;
