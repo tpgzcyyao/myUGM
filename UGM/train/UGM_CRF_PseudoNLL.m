@@ -28,15 +28,15 @@ for i = 1:nInstances
             edges = E(V(n):V(n+1)-1);
             
             % Compute Probability of Each State with Neighbors Fixed
-            pot = nodePot(n,1:nStates(n),i);
+            pot = nodePot(n,1:nStates(n));
             for e = edges(:)'
                 n1 = edgeEnds(e,1);
                 n2 = edgeEnds(e,2);
                 
                 if n == edgeEnds(e,1)
-                    ep = edgePot(1:nStates(n),Y(i,n2),e,i).';
+                    ep = edgePot(1:nStates(n),Y(i,n2),e).';
                 else
-                    ep = edgePot(Y(i,n1),1:nStates(n),e,i);
+                    ep = edgePot(Y(i,n1),1:nStates(n),e);
                 end
                 pot = pot .* ep;
             end
