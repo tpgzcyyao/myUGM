@@ -1,6 +1,7 @@
 function [alpha,kappa,mxState] = UGM_ChainFwd(nodePot,edgePot,nStates,maximize)
 [nNodes,maxState] = size(nodePot);
 
+mxState = zeros(nNodes,maxState);
 alpha = zeros(nNodes,maxState);
 alpha(1,1:nStates(1)) = nodePot(1,1:nStates(1));
 kappa(1) = sum(alpha(1,1:nStates(1)));
